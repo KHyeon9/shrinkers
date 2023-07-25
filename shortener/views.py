@@ -13,15 +13,7 @@ from django.contrib.auth.decorators import login_required
 
 
 def index(request):
-    user = Users.objects.filter(id=request.user.id).first()
-    # user = Users.objects.get(username="admin") 없으면 에러가 생김
-    email = user.email if user else "Anonymous User!"
-    print(email)
-    print("Log in?", request.user.is_authenticated)
-    if request.user.is_authenticated is False:
-        email = "Anonymous User!"
-        print(email)
-    return render(request, "base.html", {"welcome_msg": f"Hello {email}"})
+    return render(request, "base.html")
 
 
 @csrf_exempt
@@ -113,6 +105,7 @@ def list_view(request):
     return render(request, "boards.html", context)
 
 
+@login_required
 def url_list(request):
     get_list = ShortenedUrls.objects.order_by("-created_at").all()
     context = {"list": get_list}
