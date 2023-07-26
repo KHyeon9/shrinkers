@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms.widgets import Widget
 from django.utils.translation import gettext_lazy as _
 from shortener.models import Users, ShortenedUrls
+from shortener.utils import url_count_changer
 
 
 class RegisterForm(UserCreationForm):
@@ -73,11 +74,17 @@ class UrlCreateForm(forms.ModelForm):
 
     def save(self, request, commit=True):
         instance = super(UrlCreateForm, self).save(commit=False)
-        instance.created_by_id = request.user.id
+        instance.creator_id = request.user.id
         instance.target_url = instance.target_url.strip()
 
         if commit:
-            instance.save()
+
+            try:
+                instance.save()
+            except Exception as e:
+                print(e)
+            else:
+                url_count_changer(request, True)
 
         return instance
 
@@ -85,7 +92,7 @@ class UrlCreateForm(forms.ModelForm):
         instance = super(UrlCreateForm, self).save(commit=False)
         instance.target_url = instance.target_url.strip()
 
-        ShortenedUrls.objects.filter(pk=url_id, created_by_id=request.user.id).update(
+        ShortenedUrls.objects.filter(pk=url_id, creator_id=request.user.id).update(
             target_url=instance.target_url,
             nick_name=instance.nick_name
         )
