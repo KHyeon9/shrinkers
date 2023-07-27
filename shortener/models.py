@@ -1,8 +1,8 @@
 import random
 import string
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import User as U
+from django.contrib.gis.geoip2 import GeoIP2
 
 
 # Create your models here.
@@ -69,12 +69,17 @@ class ShortenedUrls(TimeStampedModel):
         str_pool = string.ascii_letters
         return random.choice(str_pool).lower()
 
+    def clicked(self):
+        self.click += 1
+        self.save()
+
     nick_name = models.CharField(max_length=100)
     category = models.ForeignKey(
         Categories, on_delete=models.DO_NOTHING, null=True)
     prefix = models.CharField(max_length=50, default=rand_letter)
     creator = models.ForeignKey(Users, on_delete=models.CASCADE)
     target_url = models.CharField(max_length=2000)
+    click = models.BigIntegerField(default=0)
     shortened_url = models.CharField(max_length=6, default=rand_string)
     create_via = models.CharField(
         max_length=8, choices=UrlCreatedVia.choices, default=UrlCreatedVia.WEBSITE)
@@ -89,3 +94,42 @@ class ShortenedUrls(TimeStampedModel):
                 ]
             ),
         ]
+
+
+class Statistic(TimeStampedModel):
+    class ApproachDevice(models.TextChoices):
+        PC = "pc"
+        MOBILE = "mobile"
+        TABLET = "tablet"
+
+    def record(self, request, url: ShortenedUrls):
+        self.shortened_url = url
+        self.ip = request.META["REMOTE_ADDR"]
+        self.web_browser = request.user_agent.browser.family
+
+        if request.user_agent.is_mobile:
+            self.device = self.ApproachDevice.MOBILE
+        elif request.user_agent.is_tablet:
+            self.device = self.ApproachDevice.TABLET
+        else:
+            self.device = self.ApproachDevice.PC
+
+        self.device_os = request.user_agent.os.family
+
+        try:
+            country = GeoIP2().country(self.ip)
+            self.country_code = country.get("country_code", "XX")
+            self.country_name = country.get("country_name", "XX")
+        except:
+            pass
+
+        url.clicked()
+        self.save()
+
+    shortened_url = models.ForeignKey(ShortenedUrls, on_delete=models.CASCADE)
+    ip = models.CharField(max_length=15)
+    web_browser = models.CharField(max_length=50)
+    device = models.CharField(max_length=6, choices=ApproachDevice.choices)
+    device_os = models.CharField(max_length=30)
+    country_code = models.CharField(max_length=2, default="XX")
+    country_name = models.CharField(max_length=100, default="UNKNOWN")
