@@ -36,13 +36,14 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
-    'shortener',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'shortener',
+    'django_user_agents',
 ]
 
 # if DEBUG:
@@ -65,12 +66,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_user_agents.middleware.UserAgentMiddleware",
 ]
 
 # if DEBUG:
 #     MIDDLEWARE += [
 #         "debug_toolbar.middleware.DebugToolbarMiddleware",  # Django Debug Toolbar
 #     ]
+
+GEOIP_PATH = os.path.join(BASE_DIR, "geolite2")
 
 ROOT_URLCONF = 'shrinkers.urls'
 

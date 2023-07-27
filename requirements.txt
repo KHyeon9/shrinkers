@@ -30,7 +30,7 @@ pytz
 regex
 requests
 six
-sqlparse=
+sqlparse
 text-unidecode
 toml
 typing-extensions
