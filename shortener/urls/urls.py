@@ -1,6 +1,13 @@
-from shortener.urls.views import url_change, url_list, url_create
 from django.urls import path
 
+from rest_framework import routers
+
+from shortener.urls.apis import UrlListView
+from shortener.urls.views import url_change, url_list, url_create
+
+
+router = routers.DefaultRouter()
+router.register(r'urls', UrlListView)
 
 urlpatterns = [
     path("", url_list, name="url_list"),
