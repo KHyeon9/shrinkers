@@ -50,7 +50,6 @@ class UrlCreateSerializer(serializers.Serializer):
             else:
                 url_count_changer(request, True)
 
-        print(instance)
         return instance
 
     nick_name = serializers.CharField(max_length=50)
