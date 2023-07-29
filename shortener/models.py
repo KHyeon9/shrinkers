@@ -77,6 +77,7 @@ class ShortenedUrls(TimeStampedModel):
     def clicked(self):
         self.click += 1
         self.save()
+        return self
 
     nick_name = models.CharField(max_length=100)
     category = models.ForeignKey(
