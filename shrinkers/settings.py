@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'shortener',
     'django_user_agents',
     'rest_framework',
+    'drf_yasg',
 ]
 
 # if DEBUG:
