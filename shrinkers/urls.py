@@ -20,11 +20,14 @@ from django.conf.urls import include
 
 from rest_framework import permissions
 
+from ninja import NinjaAPI
+
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 from shortener.urls.views import url_redirect
 from shortener.urls.urls import router as url_router
+from shortener.users.apis import user as user_router
 
 # from shrinkers.settings import DEBUG
 
@@ -44,6 +47,9 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+apis = NinjaAPI(title="Shrinkers API")
+apis.add_router("/users/", user_router, tags=["Common"])
+
 urlpatterns = [
     re_path(r"^swagger(?P<format>\.json|\.yaml)$",
             schema_view.without_ui(cache_timeout=0), name="schema-json"),
@@ -55,6 +61,7 @@ urlpatterns = [
     path("", include("shortener.index.urls")),
     path("urls/", include("shortener.urls.urls")),
     path("api/", include(url_router.urls)),
+    path("ninja-api/", apis.urls),
     path("<str:prefix>/<str:url>", url_redirect),
 ]
 
