@@ -11,15 +11,7 @@ from shortener.utils import url_count_changer
 
 
 def url_list(request):
-    a = (
-        Statistic.objects.filter(shortened_url_id=5)
-        .values("custom_params__email_id")
-        .annotate(t=Count("custom_params__email_id"))
-    )
-    print(a)
-
-    get_list = ShortenedUrls.objects.order_by("-created_at").all()
-    context = {"list": get_list}
+    context = {}
     return render(request, "url_list.html", context)
 
 
@@ -89,23 +81,26 @@ def url_change(request, action, url_id):
 
 @ratelimit(key="ip", rate="3/m")
 def url_redirect(request, prefix, url):
-    was_limit = getattr(request, "limited", False)
+    was_limited = getattr(request, "limited", False)
 
-    if was_limit:
+    if was_limited:
         return redirect("index")
 
     get_url = get_object_or_404(
         ShortenedUrls, prefix=prefix, shortened_url=url)
     is_permanent = False
     target = get_url.target_url
+
     if get_url.creator.organization:
         is_permanent = True
 
     if not target.startswith("https://") and not target.startswith("http://"):
         target = "https://" + get_url.target_url
 
+    print(request.GET, "-------------------------------------")
+
     custom_params = request.GET.dict() if request.GET.dict() else None
-    print(custom_params)
+
     history = Statistic()
     history.record(request, get_url, custom_params)
 

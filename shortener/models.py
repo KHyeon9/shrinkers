@@ -124,7 +124,8 @@ class Statistic(TimeStampedModel):
 
         self.device_os = request.user_agent.os.family
         t = TrackingParams.get_tracking_params(url.id)
-        self.custom_params = dict_slice(dict_filter(params, t), 5)
+        if params:
+            self.custom_params = dict_slice(dict_filter(params, t), 5)
 
         try:
             country = location_finder(request)
