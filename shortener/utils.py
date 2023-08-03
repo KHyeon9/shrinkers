@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.db.models import F
 
 from rest_framework.response import Response
@@ -16,3 +18,7 @@ def MsgOk(status: int = 200):
         "msg": "ok"
     }
     return Response(context, status=status)
+
+
+def get_kst():
+    return datetime.utcnow() + timedelta(hours=9)

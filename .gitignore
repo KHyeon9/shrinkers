@@ -3,3 +3,6 @@
 /shortener/migrations/
 /__pycache__/
 /shortener/__pycache__/
+/.vscode/
+/shrinkers/service_key.json
+.DS_Store

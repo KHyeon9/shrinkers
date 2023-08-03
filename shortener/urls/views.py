@@ -1,5 +1,9 @@
+from datetime import timedelta
+from time import strftime
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count
+from django.utils.html import json_script
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -7,9 +11,10 @@ from django_ratelimit.decorators import ratelimit
 
 from shortener.forms import UrlCreateForm
 from shortener.models import ShortenedUrls, Statistic
-from shortener.utils import url_count_changer
+from shortener.utils import url_count_changer, get_kst
 
 
+@login_required
 def url_list(request):
     context = {}
     return render(request, "url_list.html", context)
@@ -97,11 +102,39 @@ def url_redirect(request, prefix, url):
     if not target.startswith("https://") and not target.startswith("http://"):
         target = "https://" + get_url.target_url
 
-    print(request.GET, "-------------------------------------")
-
     custom_params = request.GET.dict() if request.GET.dict() else None
 
     history = Statistic()
     history.record(request, get_url, custom_params)
 
     return redirect(target, permanent=is_permanent)
+
+
+@login_required
+def statistic_view(request, url_id: int):
+    url_info = get_object_or_404(ShortenedUrls, pk=url_id)
+    base_qs = Statistic.objects.filter(
+        shortened_url_id=url_id,
+        created_at__gte=get_kst() - timedelta(days=14)
+    )
+
+    clicks = (
+        base_qs.values("created_at__date")
+        .annotate(clicks=Count("id"))
+        .values("created_at__date", "clicks")
+        .order_by("created_at__date")
+    )
+
+    date_list = [c.get("created_at__date").strftime("%Y-%m-%d")
+                 for c in clicks]
+
+    click_list = [c.get("clicks") for c in clicks]
+
+    context = {
+        "url": url_info,
+        "kst": get_kst(),
+        "date_list": date_list,
+        "click_list": click_list
+    }
+
+    return render(request, "statistics.html", context)
