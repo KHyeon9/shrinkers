@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.forms.widgets import Widget
 from django.utils.translation import gettext_lazy as _
 from shortener.models import Users, ShortenedUrls
 from shortener.utils import url_count_changer

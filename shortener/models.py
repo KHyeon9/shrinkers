@@ -1,10 +1,8 @@
 import random
 import string
-import itertools
 from typing import Dict
 
 from django.db import models
-from django.db.models.base import Model
 from django.contrib.auth.models import User as U
 
 from shortener.model_utils import location_finder, dict_slice, dict_filter
