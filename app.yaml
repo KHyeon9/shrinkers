@@ -1,9 +1,9 @@
-runtime: python39
+runtime: python311
 
 instance_class: B4
 service: default
 
-env_variable:
+env_variables:
   DJANGO_ENV: "prd"
 
 basic_scaling:
