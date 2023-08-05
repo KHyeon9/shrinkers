@@ -122,6 +122,7 @@ class Statistic(TimeStampedModel):
 
         self.device_os = request.user_agent.os.family
         t = TrackingParams.get_tracking_params(url.id)
+
         if params:
             self.custom_params = dict_slice(dict_filter(params, t), 5)
 
@@ -152,3 +153,9 @@ class TrackingParams(TimeStampedModel):
 
     shortened_url = models.ForeignKey(ShortenedUrls, on_delete=models.CASCADE)
     params = models.CharField(max_length=20)
+
+
+class Schedules(TimeStampedModel):
+    job_name = models.CharField(max_length=50)
+    flag_name = models.CharField(max_length=50)
+    value = models.IntegerField(default=0)

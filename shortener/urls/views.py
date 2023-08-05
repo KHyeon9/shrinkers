@@ -6,16 +6,19 @@ from django.db.models import Count
 from django.utils.html import json_script
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache, cache_page
 
 from django_ratelimit.decorators import ratelimit
 
 from shortener.forms import UrlCreateForm
 from shortener.models import ShortenedUrls, Statistic
+from shortener.urls.telegram_handler import command_handler
 from shortener.utils import url_count_changer, get_kst
 
 
 @login_required
 def url_list(request):
+    command_handler()
     context = {}
     return render(request, "url_list.html", context)
 
