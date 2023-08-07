@@ -159,3 +159,12 @@ class Schedules(TimeStampedModel):
     job_name = models.CharField(max_length=50)
     flag_name = models.CharField(max_length=50)
     value = models.IntegerField(default=0)
+
+
+class BackOfficeLogs(TimeStampedModel):
+    endpoint = models.CharField(max_length=2000, blank=True, null=True)
+    body = models.JSONField(null=True)
+    method = models.CharField(max_length=20, blank=True, null=True)
+    user_id = models.IntegerField(blank=True, null=True)
+    ip = models.CharField(max_length=30, blank=True, null=True)
+    status_code = models.IntegerField(blank=True, null=True)
