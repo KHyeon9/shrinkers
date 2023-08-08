@@ -52,17 +52,18 @@ class UrlListView(viewsets.ModelViewSet):
             raise Http404
 
         queryset.delete()
+        cache.delete(f"url_lists_{request.users_id}")
         url_count_changer(request, False)
 
         return MsgOk()
 
     def list(self, request):
         # GET All
-        queryset = cache.get('url_lists')
+        queryset = cache.get(f"url_lists_{request.users_id}")
 
         if not queryset:
             queryset = self.get_queryset().filter(creator_id=request.user.id).all()
-            cache.set('url_lists', queryset, 20)
+            cache.set(f"url_lists_{request.users_id}", queryset, 20)
 
         serializer = UrlListSerializer(queryset, many=True)
         return Response(serializer.data)
