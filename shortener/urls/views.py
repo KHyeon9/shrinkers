@@ -13,9 +13,11 @@ from django_ratelimit.decorators import ratelimit
 from shortener.forms import UrlCreateForm
 from shortener.models import ShortenedUrls, Statistic
 from shortener.urls.telegram_handler import command_handler
+from shortener.urls.decorators import admin_only
 from shortener.utils import url_count_changer, get_kst
 
 
+@admin_only
 @login_required
 def url_list(request):
     command_handler()
