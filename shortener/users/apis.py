@@ -4,11 +4,13 @@ from ninja.router import Router
 
 from shortener.schemas import Users as U, TelegramUpdateSchema
 from shortener.models import Users
+from shortener.urls.decorators import admin_only
 
 user = Router()
 
 
 @user.get("", response=List[U])
+@admin_only
 def get_user(request):
     a = Users.objects.all()
     return list(a)
