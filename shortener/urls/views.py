@@ -18,7 +18,6 @@ from shortener.urls.decorators import admin_only
 from shortener.utils import url_count_changer, get_kst
 
 
-@admin_only
 @login_required
 def url_list(request):
     # command_handler()
@@ -55,7 +54,7 @@ def url_change(request, action, url_id):
         url_data = ShortenedUrls.objects.filter(id=url_id)
 
         if url_data.exists():
-            if url_data.first().creator_id != request.user.id:
+            if url_data.first().creator_id != request.users_id:
                 msg = "자신이 소유하지 않은 URL 입니다."
 
             else:

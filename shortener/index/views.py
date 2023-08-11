@@ -35,7 +35,7 @@ def get_user(request, user_id):
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
-        msg = "올바르지 않은 데이터입니다."
+        msg = "올바르지 않은 데이터 입니다."
 
         if form.is_valid():
             form.save()
@@ -43,15 +43,13 @@ def register(request):
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            msg = "회원가입 완료"
+            msg = "회원가입완료"
 
-        context = {'form': form,  "msg": msg}
+        context = {"form": form, "msg": msg}
         return render(request, "register.html", context)
 
     else:
-        form = RegisterForm()
-        context = {'form': form}
-        return render(request, "register.html", context)
+        return render(request, "register.html", {})
 
 
 def login_view(request):

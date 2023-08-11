@@ -37,8 +37,9 @@ class UrlListSerializer(serializers.ModelSerializer):
 
 class UrlCreateSerializer(serializers.Serializer):
     def create(self, request, data, commit=True):
+        users = Users.objects.filter(pk=request.users_id).first()
         instance = ShortenedUrls()
-        instance.creator_id = request.user.id
+        instance.creator = users
         instance.category = data.get("category", None)
         instance.target_url = data.get("target_url").strip()
 

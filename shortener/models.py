@@ -170,7 +170,7 @@ class BackOfficeLogs(TimeStampedModel):
     status_code = models.IntegerField(blank=True, null=True)
 
 
-class DailyVisitors(TimeStampedModel):
+class DailyVisitors(models.Model):
     visit_date = models.DateField()
     visits = models.IntegerField(default=0)
     totals = models.IntegerField(default=0)
