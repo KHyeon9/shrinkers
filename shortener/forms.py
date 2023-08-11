@@ -15,44 +15,30 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = Users
-        fields = [
+        fields = (
             "username",
             "full_name",
             "email",
             "password1",
             "password2",
-        ]
+        )
 
 
 class LoginForm(forms.Form):
     email = forms.CharField(
-        max_length=100, required=True,
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "이메일"
-            }
-        )
+        max_length=100, required=True, widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "이메일"})
     )
 
     password = forms.CharField(
         max_length=30,
         required=True,
         widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "패스워드"
-            }
-        )
+            attrs={"class": "form-control", "placeholder": "패스워드"}),
     )
 
     remember_me = forms.BooleanField(
         widget=forms.CheckboxInput(
-            attrs={
-                "class": "custom-control-input",
-                "id": "_loginRememberMe"
-            }
-        ),
+            attrs={"class": "custom-control-input", "id": "_loginRememberMe"}),
         required=False,
         disabled=False,
     )
@@ -73,11 +59,10 @@ class UrlCreateForm(forms.ModelForm):
 
     def save(self, request, commit=True):
         instance = super(UrlCreateForm, self).save(commit=False)
-        instance.creator_id = request.user.id
+        instance.creator_id = request.users_id
         instance.target_url = instance.target_url.strip()
 
         if commit:
-
             try:
                 instance.save()
             except Exception as e:
@@ -90,8 +75,6 @@ class UrlCreateForm(forms.ModelForm):
     def update_form(self, request, url_id):
         instance = super(UrlCreateForm, self).save(commit=False)
         instance.target_url = instance.target_url.strip()
-
-        ShortenedUrls.objects.filter(pk=url_id, creator_id=request.user.id).update(
-            target_url=instance.target_url,
-            nick_name=instance.nick_name
+        ShortenedUrls.objects.filter(pk=url_id, creator_id=request.users_id).update(
+            target_url=instance.target_url, nick_name=instance.nick_name
         )

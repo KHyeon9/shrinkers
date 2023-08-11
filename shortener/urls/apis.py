@@ -21,7 +21,7 @@ class UrlListView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request):
-        # POST Method
+        # POST METHOD
         serializer = UrlCreateSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -37,17 +37,18 @@ class UrlListView(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def update(self, request, pk=None):
-        # PUT Method
+        # PUT METHOD
         pass
 
-    def parial_update(self, request, pk=None):
-        # PATCH Method
+    def partial_update(self, request, pk=None):
+        # PATCH METHOD
         pass
 
     @renderer_classes([JSONRenderer])
     def destroy(self, request, pk=None):
-        # DELETE Method
-        queryset = self.get_queryset().filter(pk=pk, creator_id=request.user.id)
+        # DELETE METHOD
+
+        queryset = self.get_queryset().filter(pk=pk, creator_id=request.users_id)
 
         if not queryset.exists():
             raise Http404
@@ -59,13 +60,8 @@ class UrlListView(viewsets.ModelViewSet):
         return MsgOk()
 
     def list(self, request):
-        # GET All
-        queryset = cache.get(f"url_lists_{request.users_id}")
-
-        if not queryset:
-            queryset = self.get_queryset().filter(creator_id=request.user.id).all()
-            cache.set(f"url_lists_{request.users_id}", queryset, 20)
-
+        # GET ALL
+        queryset = self.get_queryset().filter(creator_id=request.users_id).all()
         serializer = UrlListSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -88,20 +84,19 @@ class UrlListView(viewsets.ModelViewSet):
         if not queryset.exists():
             raise Http404
 
-        # browsers = (
+        # browers = (
         #     queryset.values("web_browser", "created_at__date")
         #     .annotate(count=Count("id"))
         #     .values("count", "web_browser", "created_at__date")
         #     .order_by("-created_at__date")
         # )
 
-        browsers = (
+        browers = (
             queryset.values("web_browser")
             .annotate(count=Count("id"))
             .values("count", "web_browser")
             .order_by("-count")
         )
 
-        serializer = BrowserStatSerializer(browsers, many=True)
-
+        serializer = BrowserStatSerializer(browers, many=True)
         return Response(serializer.data)
