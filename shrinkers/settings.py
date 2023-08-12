@@ -51,11 +51,11 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-# if DEBUG:
-#     INSTALLED_APPS += [
-#         "debug_toolbar",
-#         "django_seed",
-#     ]
+if DEBUG:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+        "django_seed",
+    ]
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
@@ -73,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 'django.middleware.cache.UpdateCacheMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
