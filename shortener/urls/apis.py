@@ -48,7 +48,11 @@ class UrlListView(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         # DELETE METHOD
 
-        queryset = self.get_queryset().filter(pk=pk, creator_id=request.users_id)
+        queryset = (
+            self.get_queryset().filter(pk=pk, creator_id=request.users_id)
+            if not request.user.is_supperuser
+            else self.get_queryset().filter(pk=pk)
+        )
 
         if not queryset.exists():
             raise Http404
