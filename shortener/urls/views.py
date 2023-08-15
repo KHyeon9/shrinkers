@@ -135,16 +135,22 @@ def statistic_view(request, url_id: int):
         .order_by("created_at__date")
     )
 
+    url_info = ShortenedUrls.objects.filter(
+        pk=url_id).prefetch_related("trackingparams_set").first()
+
     date_list = [c.get("created_at__date").strftime("%Y-%m-%d")
                  for c in clicks]
 
     click_list = [c.get("clicks") for c in clicks]
 
+    stats = Statistic.objects.filter(shortened_url_id=url_id).all()
+
     context = {
         "url": url_info,
         "kst": get_kst(),
         "date_list": date_list,
-        "click_list": click_list
+        "click_list": click_list,
+        "stats": stats,
     }
 
     return render(request, "statistics.html", context)
