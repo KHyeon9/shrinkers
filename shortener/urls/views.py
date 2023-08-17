@@ -21,8 +21,6 @@ from shortener.utils import url_count_changer, get_kst
 
 @login_required
 def url_list(request):
-    # command_handler()
-    visitors()
     context = {}
     return render(request, "url_list.html", context)
 

@@ -15,6 +15,7 @@ def visitors():
     SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
     KEY_FILE_LOCATION = os.path.join(
         settings.BASE_DIR, "shrinkers/service_key.json")
+    # VIEW_ID = "ga:294379264"
     VIEW_ID = "ga:294379264"
 
     print("Visitor Collected")
@@ -85,7 +86,7 @@ def visitors():
             analytics = initialize_analyticsreporting()
             response = get_report(analytics)
 
-            print(response, "ga response~~~~~~~~~~~~~~~~~~~~~~")
+            # print(response, "ga response~~~~~~~~~~~~~~~~~~~~~~")
 
             # data = response["reports"][0]["data"]["rows"]
             # today_str = today.strftime("%Y%m%d")
