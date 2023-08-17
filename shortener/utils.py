@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from time import time
 
 from django.db.models import F
 
@@ -44,10 +45,9 @@ email_content = """
 
 def send_email(**kwargs):
     mailing_list = kwargs.get("mailing_list", None)
-    content = kwargs.get("content", None)
+    print(mailing_list)
 
     if mailing_list and EMAIL_ID and EMAIL_PW:
-        yag = yagmail.SMTP({EMAIL_ID: "Shrinkers X"}, EMAIL_PW)
-        contents = [email_content.format(
-            mailing_list[0])] if not content else content
-        yag.send(mailing_list[1], "안녕하세요, 첫 이메일 입니다.", contents)
+        yag = yagmail.SMTP({EMAIL_ID: "Shrinkers Email"}, EMAIL_PW)
+        contents = [email_content.format(mailing_list[0])]
+        yag.send(mailing_list[1], "안녕하세요 첫 이메일입니다.", contents)
