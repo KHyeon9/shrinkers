@@ -67,3 +67,7 @@ class UserRegisterBody(Schema):
 
 class TelegramSendMsgBody(Schema):
     msg: str
+
+
+class SendEmailBody(Schema):
+    users_id: int
