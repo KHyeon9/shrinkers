@@ -63,3 +63,7 @@ class UserRegisterBody(Schema):
         new_users.save()
 
         return new_user
+
+
+class TelegramSendMsgBody(Schema):
+    msg: str
