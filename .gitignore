@@ -6,3 +6,4 @@
 /.vscode/
 /shrinkers/service_key.json
 .DS_Store
+/shrinkers/email_send_info.py
