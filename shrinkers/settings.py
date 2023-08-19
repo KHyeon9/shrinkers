@@ -132,18 +132,15 @@ DATABASES = {
     }
 }
 
-# try:
-#     EMAIL_ID = json.load(
-#         open(os.path.join(BASE_DIR, "keys.json"))).get("email")
-#     EMAIL_PW = json.load(
-#         open(os.path.join(BASE_DIR, "keys.json"))).get("email_pw")
+try:
+    EMAIL_ID = json.load(
+        open(os.path.join(BASE_DIR, "keys.json"))).get("email")
+    EMAIL_PW = json.load(
+        open(os.path.join(BASE_DIR, "keys.json"))).get("email_pw")
 
-# except Exception:
-#     EMAIL_ID = None
-#     EMAIL_PW = None
-
-EMAIL_ID = ""
-EMAIL_PW = ""
+except Exception:
+    EMAIL_ID = None
+    EMAIL_PW = None
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
