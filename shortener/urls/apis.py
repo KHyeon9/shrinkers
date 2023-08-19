@@ -50,7 +50,7 @@ class UrlListView(viewsets.ModelViewSet):
 
         queryset = (
             self.get_queryset().filter(pk=pk, creator_id=request.users_id)
-            if not request.user.is_supperuser
+            if not request.user.is_superuser
             else self.get_queryset().filter(pk=pk)
         )
 
